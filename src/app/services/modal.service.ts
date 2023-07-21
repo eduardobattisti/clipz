@@ -25,6 +25,10 @@ export class ModalService {
     });
   }
 
+  public unregister(id: string) {
+    this.modals = this.modals.filter(modal => modal.id !== id);
+  }
+
   public isModalOpen(id: string): boolean {
     return Boolean(this.getModal(id)?.visible);
   }
