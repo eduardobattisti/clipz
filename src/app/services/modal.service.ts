@@ -12,8 +12,6 @@ export class ModalService {
 
   private modals: IModal[] = [];
 
-  constructor() { }
-
   private getModal(id: string): IModal | null {
     return this.modals.find(el => el.id === id) ?? null;
   }
