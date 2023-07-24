@@ -32,7 +32,7 @@ export class RegisterComponent {
   confirm_password = new FormControl('', [
     Validators.required
   ]);
-  phone_number = new FormControl('', [
+  phoneNumber = new FormControl('', [
     Validators.required,
     Validators.minLength(14),
     Validators.maxLength(14)
@@ -47,7 +47,7 @@ export class RegisterComponent {
     age: this.age,
     password: this.password,
     confirm_password: this.confirm_password,
-    phone_number: this.phone_number,
+    phoneNumber: this.phoneNumber,
   });
 
   constructor(private auth: AuthService) {}

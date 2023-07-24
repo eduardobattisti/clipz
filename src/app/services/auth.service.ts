@@ -14,11 +14,11 @@ export class AuthService {
   ) {}
 
   public async createUser(userData: IUser) {
-    const { name, email, password, age, phone_number: phoneNumber } = userData;
+    const { name, email, password, age, phoneNumber: phoneNumber } = userData;
 
     await this.auth.createUserWithEmailAndPassword(email, password);
 
-    await this.db.collection('users').add({
+    await this.db.collection<IUser>('users').add({
       name,
       email,
       age,
