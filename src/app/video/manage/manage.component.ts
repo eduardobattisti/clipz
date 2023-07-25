@@ -13,6 +13,7 @@ import type IClip from 'src/app/models/clips.model';
 export class ManageComponent {
   videoOrder = '1';
   clips: IClip[] = [];
+  activeClip: IClip | null = null;
 
   constructor(
     private router: Router,
@@ -51,6 +52,8 @@ export class ManageComponent {
 
   openModal($event: Event, clip: IClip) {
     $event.preventDefault();
+
+    this.activeClip = clip;
 
     this.modalService.toggleModal('editClip');
   }
