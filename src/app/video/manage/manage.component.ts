@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ClipService } from 'src/app/services/clip.service';
+import { ModalService } from 'src/app/services/modal.service';
+
 import type IClip from 'src/app/models/clips.model';
 
 @Component({
@@ -15,7 +17,8 @@ export class ManageComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private clipService: ClipService
+    private clipService: ClipService,
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {
@@ -44,5 +47,11 @@ export class ManageComponent {
         sort: value
       }
     });
+  }
+
+  openModal($event: Event, clip: IClip) {
+    $event.preventDefault();
+
+    this.modalService.toggleModal('editClip');
   }
 }
