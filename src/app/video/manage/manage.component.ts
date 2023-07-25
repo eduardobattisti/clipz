@@ -65,4 +65,14 @@ export class ManageComponent {
       }
     })
   }
+
+  deleteClip($event: Event, clip: IClip)  {
+    $event.preventDefault();
+
+    this.clipService.deleteClip(clip);
+
+    this.clips = this.clips.filter(
+      element => element.docID !== clip.docID
+    );
+  }
 }
