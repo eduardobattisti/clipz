@@ -7,6 +7,7 @@ import { ClipService } from 'src/app/services/clip.service';
 import firebase from 'firebase/compat/app';
 import { v4 as uuid } from 'uuid';
 import { last, switchMap } from 'rxjs';
+import { FfmpegService } from 'src/app/services/ffmpeg.service';
 
 @Component({
   selector: 'app-upload',
@@ -27,6 +28,7 @@ export class UploadComponent implements OnDestroy {
   showPercentage = false;
   user: firebase.User | null =  null;
   task?: AngularFireUploadTask;
+  screenshots: string[] = [];
   title = new FormControl('', {
     validators: [
       Validators.required,
@@ -44,16 +46,18 @@ export class UploadComponent implements OnDestroy {
     private storage: AngularFireStorage,
     private auth: AngularFireAuth,
     private clipsService: ClipService,
-    private router: Router
+    private router: Router,
+    public ffmpegService: FfmpegService
   ) {
     auth.user.subscribe(user => this.user = user);
+    this.ffmpegService.init();
   }
 
   ngOnDestroy(): void {
     this.task?.cancel();
   }
 
-  storeFile($event: Event) {
+  async storeFile($event: Event) {
     this.isDragover = false;
 
     this.file = ($event as DragEvent).dataTransfer
@@ -63,6 +67,8 @@ export class UploadComponent implements OnDestroy {
     if(!this.file || this.file.type !== this.allowedFileMimeType) {
       return;
     }
+
+    this.screenshots = await this.ffmpegService.getScreenshots(this.file);
 
     this.uploadForm.get('title')?.setValue(
       this.file.name.replace(/\.[^/.]+$/, '')
