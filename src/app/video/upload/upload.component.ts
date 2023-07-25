@@ -1,4 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/compat/storage';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -42,7 +43,8 @@ export class UploadComponent implements OnDestroy {
   constructor(
     private storage: AngularFireStorage,
     private auth: AngularFireAuth,
-    private clipsService: ClipService
+    private clipsService: ClipService,
+    private router: Router
   ) {
     auth.user.subscribe(user => this.user = user);
   }
@@ -92,7 +94,7 @@ export class UploadComponent implements OnDestroy {
       last(),
       switchMap(() => clipReference.getDownloadURL())
     ).subscribe({
-      next: (url) => {
+      next: async (url) => {
         const clip = {
           uid: this.user?.uid as string,
           displayName: this.user?.displayName as string,
@@ -101,13 +103,17 @@ export class UploadComponent implements OnDestroy {
           url
         };
 
-        this.clipsService.createClip(clip);
+        const clipDocRef = await this.clipsService.createClip(clip);
 
         console.log(clip)
 
         this.alertColor = 'green';
         this.alertMsg = 'Success! Your clip is now ready to share with the world.';
         this.showPercentage = false;
+
+        setTimeout(() => {
+          this.router.navigate(['clip', clipDocRef.id])
+        }, 1000)
       },
       error: (error) => {
         this.uploadForm.enable();
