@@ -3,6 +3,7 @@ import {
   AngularFirestore,
   AngularFirestoreCollection,
   DocumentReference,
+  Query,
   QuerySnapshot
 } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -18,6 +19,7 @@ import type IClip from '../models/clips.model';
 export class ClipService implements Resolve<IClip | null> {
   public clipsCollection: AngularFirestoreCollection<IClip>;
   pageClips: IClip[] = [];
+  query?: Query<IClip>;
   pendingReq = false;
 
   constructor(
@@ -79,20 +81,22 @@ export class ClipService implements Resolve<IClip | null> {
 
     this.pendingReq = true;
 
-    let query = this.clipsCollection.ref
-      .orderBy('timestamp', 'desc')
-      .limit(6);
-
     const { length } = this.pageClips;
 
     if(length) {
       const lastDocID = this.pageClips[length - 1].docID;
       const lastDoc = await firstValueFrom(this.clipsCollection.doc(lastDocID).get());
 
-      query = query.startAfter(lastDoc);
+      this.query = this.clipsCollection.ref.startAfter(lastDoc);
+
+      console.log(this.query);
+    } else {
+      this.query = this.clipsCollection.ref
+        .orderBy('timestamp', 'desc')
+        .limit(6);
     }
 
-    const snapshot = await query.get();
+    const snapshot = await this.query.get();
 
     snapshot.forEach(doc => {
       this.pageClips.push({
@@ -106,7 +110,7 @@ export class ClipService implements Resolve<IClip | null> {
 
   resolve(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    _state: RouterStateSnapshot
   ) {
     return this.clipsCollection.doc(route.params['id'])
       .get()
