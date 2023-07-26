@@ -1,0 +1,7 @@
+.card-img-top {
+  max-height: 180px;
+
+  @media not all and (min-width: 768px) {
+    max-height: 300px;
+  }
+}

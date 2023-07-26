@@ -1,10 +1,17 @@
 <!-- Top Bar -->
 <section class="container mx-auto my-8 bg-secondary p-6">
-  <div class="rounded relative flex justify-between">
-    <a routerLink="/upload" class="bg-indigo-400 text-white py-4 px-10 text-xl">Upload Videos</a>
+  <div class="rounded relative flex  flex-wrap sm:justify-between justify-center">
+    <a
+      routerLink="/upload"
+      class="bg-indigo-400 text-white py-4 px-10 text-xl sm:w-fit w-full
+              text-center"
+    >Upload Videos</a>
 
     <!-- Sort Videos -->
-    <select (change)="sort($event)" class="text-black px-8 text-xl outline-none appearance-none">
+    <select
+      (change)="sort($event)"
+      class="text-black px-8 py-4 text-xl outline-none appearance-none sm:w-fit w-full text-center sm:mt-0 mt-3"
+    >
       <option value="1" [selected]="videoOrder === '1'">Recent Uploads</option>
       <option value="2" [selected]="videoOrder === '2'">Oldest Uploads</option>
     </select>
@@ -23,7 +30,11 @@
 
       <!-- Image -->
       <a href="#">
-        <img class="card-img-top rounded-tl-2xl w-full" [src]="clip.screenshotURL" crossorigin>
+        <img
+          class="card-img-top rounded-tl-2xl w-full object-cover"
+          [src]="clip.screenshotURL"
+          crossorigin
+        >
       </a>
 
       <!-- Body -->
@@ -32,7 +43,7 @@
         <a [routerLink]="['/', 'clip', clip.docID]" class="font-bold mb-2">
           {{ clip.title }}
         </a>
-        <a (click)="copyToClipboard($event, clip.docID)" class="bg-gray-400 text-white px-2 py-1 ml-2 text-sm rounded">
+        <a (click)="copyToClipboard($event, clip.docID)" class="bg-gray-400 text-white px-2 py-1 mt-2 w-fit text-sm rounded block cursor-pointer">
           Copy Link
         </a>
       </div>
